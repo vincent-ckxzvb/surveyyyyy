@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Just a Survey</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #87CEEB, #B0E0E6);
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        input[type="text"], select {
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .success-message {
+            display: none;
+            color: green;
+            margin-top: 20px;
+        }
+
+        /* Flower Animation */
+        .flower {
+            position: absolute;
+            width: 50px; /* Adjusted size */
+            height: auto; /* Maintain aspect ratio */
+            background-image: url('ggg.png'); /* Your lavender icon */
+            background-size: contain;
+            animation: floatFlower 10s linear infinite;
+            z-index: 10; /* Ensure it appears in front */
+        }
+
+        @keyframes floatFlower {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-30px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        /* Position flowers randomly */
+        .flower:nth-child(1) { left: 10%; top: 80%; animation-duration: 8s; }
+        .flower:nth-child(2) { left: 30%; top: 75%; animation-duration: 9s; }
+        .flower:nth-child(3) { left: 50%; top: 85%; animation-duration: 7s; }
+        .flower:nth-child(4) { left: 70%; top: 78%; animation-duration: 10s; }
+        .flower:nth-child(5) { left: 90%; top: 82%; animation-duration: 8s; }
+    </style>
+</head>
+<body>
+    <!-- Background Music -->
+    <audio id="background-music" autoplay loop>
+        <source src="gg.mp3" type="audio/mpeg"> 
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Animated Flowers -->
+    <div class="flower"></div>
+    <div class="flower"></div>
+    <div class="flower"></div>
+    <div class="flower"></div>
+    <div class="flower"></div>
+
+    <div class="form-container">
+        <h2>Just a Survey</h2>
+        <form id="relationship-form" action="https://formspree.io/f/mgvewlgd" method="POST">
+            <label for="name">Enter your name:</label><br>
+            <input type="text" id="name" name="name" placeholder="Your name" required><br><br>
+
+            <label for="relationship-status">Do you have a boyfriend/girlfriend?</label><br>
+            <select id="relationship-status" name="relationship-status" required>
+                <option value="" disabled selected>Select an option</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="It's complicated">It's complicated</option>
+            </select><br><br>
+
+            <label for="age">How old are you?</label><br>
+            <input type="text" id="age" name="age" placeholder="Enter your age" required><br><br>
+
+            <label for="talking-status">Are you currently talking with someone romantically?</label><br>
+            <select id="talking-status" name="talking-status" required>
+                <option value="" disabled selected>Select an option</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select><br><br>
+
+            <label for="partner-preferences">What do you look for in a partner?</label><br>
+            <input type="text" id="partner-preferences" name="partner-preferences" placeholder="Your answer" required><br><br>
+
+            <label for="relationship-history">Have you been in a relationship before?</label><br>
+            <select id="relationship-history" name="relationship-history" required>
+                <option value="" disabled selected>Select an option</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select><br><br>
+
+            <label for="love-language">What is your love language?</label><br>
+            <input type="text" id="love-language" name="love-language" placeholder="e.g., Words of affirmation, Physical touch" required><br><br>
+
+            <label for="important-thing">What’s the most important thing for you in a relationship?</label><br>
+            <input type="text" id="important-thing" name="important-thing" placeholder="Your answer" required><br><br>
+
+            <button type="submit">Submit</button>
+            <p class="success-message" id="success-message">Thank you! Your message was sent to me.</p>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('relationship-form');
+        const successMessage = document.getElementById('success-message');
+        const backgroundMusic = document.getElementById('background-music');
+
+        // Play music after name submission
+        document.getElementById('name').addEventListener('input', function() {
+            if (this.value.length > 0) {
+                backgroundMusic.play().catch(error => {
+                    console.log("Audio playback failed:", error);
+                });
+            }
+        });
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();  // Prevent the default form submit
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    successMessage.style.display = 'block';
+                    form.reset();
+                } else {
+                    alert("Oops! There was a problem with your submission.");
+                }
+            } catch (error) {
+                alert("Oops! There was an error.");
+            }
+        });
+    </script>
+</body>
+</html>
